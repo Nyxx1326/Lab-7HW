@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        /* Reset and body */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Title */
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 40px;
+        }
+
+        /* Stats boxes */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .stat-box {
+            flex: 1 1 250px;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-box h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stat-box p {
+            font-size: 22px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Section titles */
+        h2.section-title {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #764ba2;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        /* Lists */
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 5px 0;
+            font-size: 16px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Low stock highlight */
+        .low-stock {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Product Dashboard</h1>
+
+        <!-- Stats boxes -->
+        <div class="stats">
+            <div class="stat-box">
+                <h2>Total Inventory Value</h2>
+                <p th:text="'$' + ${totalValue}">0</p>
+            </div>
+            <div class="stat-box">
+                <h2>Average Product Price</h2>
+                <p th:text="'$' + ${averagePrice}">0</p>
+            </div>
+        </div>
+
+        <!-- Products by Category -->
+        <div>
+            <h2 class="section-title">Products by Category</h2>
+            <ul>
+                <li th:each="entry : ${categoryCounts}" 
+                    th:text="${entry.key} + ': ' + ${entry.value}">
+                    Category: 0
+                </li>
+            </ul>
+        </div>
+
+        <!-- Low Stock Products -->
+        <div>
+            <h2 class="section-title">Low Stock Products (Quantity &lt; 10)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${lowStockProducts}">
+                        <td th:text="${p.productCode}"></td>
+                        <td th:text="${p.name}" class="low-stock"></td>
+                        <td th:text="${p.quantity}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Recent Products -->
+        <div>
+            <h2 class="section-title">Recent Products</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${recentProducts}">
+                        <td th:text="${p.productCode}"></td>
+                        <td th:text="${p.name}"></td>
+                        <td th:text="${p.category}"></td>
+                        <td th:text="'$' + ${p.price}"></td>
+                        <td th:text="${p.quantity}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
